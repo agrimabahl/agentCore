@@ -1,0 +1,34 @@
+# Research Brief Multi-Agent Pipeline (Macroscope test repo)
+
+A small multi-agent system for testing AI code-review tools. A `Planner`
+agent splits a free-text brief into subtasks, a `Researcher` agent fetches
+and scores source material for each subtask concurrently, a `Writer` agent
+drafts a paragraph per subtask, and a `Critic` agent checks each draft
+against configurable rules, looping back to the writer when a draft fails.
+
+```
+Planner -> Researcher (parallel) -> Writer -> Critic -> (loop) -> done
+```
+
+## Running it
+
+```bash
+pip install -r requirements.txt
+python main.py "vector databases, agent memory, tool routing"
+pytest tests/
+```
+
+Both commands succeed, and the test suite passes. That's intentional.
+
+## Why this repo exists
+
+This codebase has several realistic bugs seeded into it on purpose,
+spanning data integrity, security, concurrency, and correctness issues —
+similar in flavor to issues that have come up in real review (e.g., the
+binary-classifier label-handling bug in `tools/scoring.py` mirrors a
+`probability(yes)`/`probability(no)`-style bug from a PMML scorer).
+
+Push this to a repo with Macroscope installed, open a PR, and see what it
+flags versus what the unit tests miss. `SEEDED_BUGS.md` has the answer key
+— don't open it until after you've seen what the review tool catches, or
+you'll bias your own read on precision/recall.
